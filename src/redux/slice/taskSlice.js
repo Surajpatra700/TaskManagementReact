@@ -12,7 +12,7 @@ const initialState = {
   },
   isEditItem: null,
   isEdit: false,
-  tbtn: false,
+  add: true
 };
 
 const handleAddItem = (state) => {
@@ -20,7 +20,7 @@ const handleAddItem = (state) => {
     alert("Please fill anything!");
   } else if (state.inputData && state.isEdit) {
     state.tasks = state.tasks.map((e) => {
-      if (e.id === state.isEditItem) {
+      if (e.name === state.isEditItem) {
         return { ...e, ...state.inputData }
       }
       return e;
@@ -28,6 +28,7 @@ const handleAddItem = (state) => {
     state.inputData = initialState.inputData;
     state.isEditItem = null;
     state.isEdit = false;
+    state.add = true;
   } else {
     state.tasks.push(state.inputData);
     state.inputData = initialState.inputData;
@@ -43,6 +44,7 @@ const handleEditItem = (state, action) => {
   state.inputData = eitem;
   state.isEditItem = action.payload;
   state.isEdit = true;
+  state.add = false
 };
 
 const taskSlice = createSlice({
@@ -63,10 +65,7 @@ const taskSlice = createSlice({
     },
     addItem: handleAddItem,
     deleteItem: handleDeleteItem,
-    editItem: handleEditItem,
-	toggleTbtn: (state,action) => {
-	   state.tbtn = action.payload;
-	},
+    editItem: handleEditItem
   },
 });
 
@@ -77,8 +76,7 @@ export const {
   setIsEditItem,
   addItem,
   deleteItem,
-  editItem,
-  toggleTbtn,
+  editItem
 } = taskSlice.actions;
 
 export default taskSlice.reducer;
