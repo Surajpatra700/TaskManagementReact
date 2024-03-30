@@ -24,7 +24,7 @@ Make sure you have Node.js and npm (or yarn) installed on your local machine.
 2. Navigate into the project directory:
 
     ```bash
-    cd TaskManagementReact
+    cd Task_management
     ```
 
 3. Install the dependencies using npm:
