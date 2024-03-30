@@ -1,0 +1,49 @@
+.card {
+    width:28rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 20px;
+    margin: 10px;
+  }
+  
+  .cardTitle {
+    font-weight: bold;
+    margin-bottom: 5px;
+    display: flex;
+  }
+  
+  .cardText {
+    font-weight: 400;
+    margin-bottom: 10px;
+  }
+  
+  .cardButton {
+    background-color: #007bff;
+    color: #fff;
+    text-align: center;
+    padding: 8px 0;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 1rem;
+  }
+  .cardButtonD {
+    background-color: rgb(233, 34, 8);
+    color: #fff;
+    text-align: center;
+    padding: 8px 0;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .cardButton:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Responsive styles */
+  @media screen and (max-width: 768px) {
+    .card {
+      width: 18rem;
+      padding: 1rem;
+    }
+  }
+  
