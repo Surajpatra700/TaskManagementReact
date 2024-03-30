@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Card from "../../components/Card";
 import { useDispatch, useSelector } from "react-redux";
+import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import {
   setTasks,
   setCategories,
@@ -8,7 +9,7 @@ import {
   setIsEditItem,
   addItem,
   deleteItem,
-  editItem
+  editItem,
 } from "../../redux/slice/taskSlice";
 
 const getTasks = () => {
@@ -29,8 +30,6 @@ const getCategories = () => {
   }
 };
 
-
-
 function App() {
   const dispatch = useDispatch();
   const { tasks, categories, inputData, add } = useSelector(
@@ -46,7 +45,7 @@ function App() {
   const [order, setOrder] = useState(tasks);
   const [status, setStatus] = useState("all");
   const [ocat, setOcat] = useState("all");
-  const [search,setSearch]=useState("");
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     localStorage.setItem("mytasks", JSON.stringify(tasks));
@@ -74,14 +73,15 @@ function App() {
     const searchTasks = () => {
       setOrder(tasks);
       if (search.length !== 0) {
-        setOrder(order.filter(item => item.name.toLowerCase().includes(search.toLowerCase())));
-      }      
-      else setOrder(tasks);
-    }
+        setOrder(
+          order.filter((item) =>
+            item.name.toLowerCase().includes(search.toLowerCase())
+          )
+        );
+      } else setOrder(tasks);
+    };
     searchTasks();
-  }, [tasks, search])
-  
-
+  }, [tasks, search]);
 
   const createCategory = () => {
     if (newcat.length === 0) {
@@ -120,15 +120,29 @@ function App() {
     dispatch(editItem(name));
   };
 
-  const sortorder = () =>{
+  const sortorder = () => {
     let neworder = [...order];
     neworder.sort((a, b) => {
-      if (a.priority === 'high') return -1;
-      if (a.priority === 'medium' && b.priority === 'low') return -1;
-      if (a.priority === 'low' && (b.priority === 'medium' || b.priority === 'high')) return 1;
+      if (a.priority === "high") return -1;
+      if (a.priority === "medium" && b.priority === "low") return -1;
+      if (
+        a.priority === "low" &&
+        (b.priority === "medium" || b.priority === "high")
+      )
+        return 1;
       return 0;
     });
     setOrder(neworder);
+  };
+
+  const handleDragEnd = (results) => {
+    if(!results.destination){
+      return;
+    }
+    let temporder = [...order]
+    let [selected] = temporder.splice(results.source.index, 1)
+    temporder.splice(results.destination.index,0,selected)
+    setOrder(temporder)
   }
 
   return (
@@ -263,7 +277,7 @@ function App() {
             }}
           />
           <div className="button" onClick={handleAddItem}>
-            {add===true?"Add":"Update"}
+            {add === true ? "Add" : "Update"}
           </div>
           <h1 className="headTitle">Add a Category</h1>
           <label className="heading" htmlFor="cat-input">
@@ -275,7 +289,7 @@ function App() {
             id="cat-input"
             name="name"
             value={newcat}
-            onChange={e=>setNewcat(e.target.value)}
+            onChange={(e) => setNewcat(e.target.value)}
           />
           <div className="button" onClick={createCategory}>
             Add
@@ -289,7 +303,7 @@ function App() {
               type="text"
               placeholder="Search tasks..."
               value={search}
-              onChange={e=>setSearch(e.target.value)}
+              onChange={(e) => setSearch(e.target.value)}
             />
             <select
               className="input-style"
@@ -313,21 +327,40 @@ function App() {
               ))}
             </select>
             <div className="button" onClick={sortorder}>
-              Sort Tasks
+              Sort Tasks By Priority
             </div>
           </div>
-          {order.map((item, index) => (
-            <Card
-              key={index}
-              name={item.name}
-              status={item.status}
-              category={item.category}
-              priority={item.priority}
-              dueDate={item.dueDate}
-              editItem={() => handleEditItem(item.name)}
-              deleteItem={() => handleDeleteItem(item.name)}
-            />
-          ))}
+
+          <DragDropContext onDragEnd={(results) => handleDragEnd(results)}>
+            <div className="drag-drop-container">
+              {order.length === 0 && <div>Tasks will be displayed here</div>}
+              {order.length !== 0 && <div>Your tasks</div>}
+              <Droppable droppableId="tasks">
+                {(provided) => (
+                  <div ref={provided.innerRef} {...provided.droppableProps}>
+                    {order.map((item, index) => (
+                      <Draggable draggableId={String(index)} index={index} key={index}>
+                        {(provided) => (
+                          <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+                            <Card
+                              name={item.name}
+                              status={item.status}
+                              category={item.category}
+                              priority={item.priority}
+                              dueDate={item.dueDate}
+                              editItem={() => handleEditItem(item.name)}
+                              deleteItem={() => handleDeleteItem(item.name)}
+                            />
+                          </div>
+                        )}
+                      </Draggable>
+                    ))}
+                    {provided.placeholder}
+                  </div>
+                )}
+              </Droppable>
+            </div>
+          </DragDropContext>
         </div>
       </div>
     </>

@@ -52,6 +52,13 @@
     display:flex;
     justify-content: space-between;
   }
+  .drag-drop-container{
+    margin: 20px 0px 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
   /* Responsive styles */
   @media screen and (max-width: 768px) {
     .form {
