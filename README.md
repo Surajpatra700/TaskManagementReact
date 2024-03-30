@@ -18,13 +18,13 @@ Make sure you have Node.js and npm (or yarn) installed on your local machine.
 1. Clone the repository to your local machine using Git:
 
     ```bash
-    git clone https://github.com/your-username/react-application.git
+    git clone https://github.com/Sumit-910/TaskManagementReact.git
     ```
 
 2. Navigate into the project directory:
 
     ```bash
-    cd react-application
+    cd TaskManagementReact
     ```
 
 3. Install the dependencies using npm:
